@@ -10,19 +10,19 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  test:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore ./MSTestPlaywright/MSTestPlaywright.sln
+    - name: Build & Install
+      run: dotnet build ./MSTestPlaywright/MSTestPlaywright.sln
     - name: Install Playwright browsers
-      run: pwsh ./MSTestPlaywright/bin/Debug/net8.0/playwright.ps1 install
+      run: pwsh ./MSTestPlaywright/bin/Debug/net8.0/playwright.ps1 install --with-deps
     - name: Run tests
-      run: dotnet test ./MSTestPlaywright/MSTestPlaywright.sln --no-restore --verbosity normal
+      run: dotnet test ./MSTestPlaywright/MSTestPlaywright.sln --verbosity normal
