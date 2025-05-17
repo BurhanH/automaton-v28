@@ -23,6 +23,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./MSTestPlaywright/MSTestPlaywright.sln
     - name: Install Playwright browsers
-      run: pwsh bin/Debug/net8.0/playwright.ps1 install
+      # run: pwsh bin/Debug/net8.0/playwright.ps1 install
+      run: ls -lah
     - name: Run tests
       run: dotnet test ./MSTestPlaywright/MSTestPlaywright.sln --no-restore --verbosity normal
