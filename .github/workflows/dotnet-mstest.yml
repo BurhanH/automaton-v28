@@ -25,6 +25,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Build & Install
+      run: dotnet build ./MSTestPlaywright/MSTestPlaywright.sln
     - name: Cache Playwright browsers
       id: cache-playwright
       uses: actions/cache@v4
@@ -37,8 +39,8 @@ jobs:
       if: steps.cache-playwright.outputs.cache-hit != 'true'
       run: |
         pwsh ./MSTestPlaywright/bin/Debug/net8.0/playwright.ps1 install --with-deps
-    - name: Build & Install
-      run: dotnet build ./MSTestPlaywright/MSTestPlaywright.sln
+    # - name: Build & Install
+    #   run: dotnet build ./MSTestPlaywright/MSTestPlaywright.sln
     # - name: Install Playwright browsers
     #  run: pwsh ./MSTestPlaywright/bin/Debug/net8.0/playwright.ps1 install --with-deps
     - name: Run tests
