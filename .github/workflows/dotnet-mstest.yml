@@ -38,7 +38,7 @@ jobs:
     - name: Install Playwright browsers and dependencies
       if: steps.cache-playwright.outputs.cache-hit != 'true'
       run: |
-        pwsh ./MSTestPlaywright/bin/Debug/net8.0/playwright.ps1 install --with-deps --no-shell
+        pwsh ./MSTestPlaywright/bin/Debug/net8.0/playwright.ps1 install --with-deps
     # - name: Build & Install
     #   run: dotnet build ./MSTestPlaywright/MSTestPlaywright.sln
     # - name: Install Playwright browsers
