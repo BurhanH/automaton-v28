@@ -17,32 +17,11 @@ jobs:
       image: mcr.microsoft.com/playwright/dotnet:v1.52.0-noble
     steps:
     - uses: actions/checkout@v4
-    # - name: Extract Playwright version
-    #   id: get-playwright-version
-    #   run: |
-    #     VERSION=$(sed -n 's/.*Microsoft\.Playwright\.MSTest" Version="\([^"]*\).*/\1/p' MSTestPlaywright/*.csproj)
-    #     echo "version=$VERSION" >> $GITHUB_OUTPUT
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: Build & Install
       run: dotnet build ./MSTestPlaywright/MSTestPlaywright.sln
-    # - name: Cache Playwright browsers
-    #   id: cache-playwright
-    #   uses: actions/cache@v4
-    #   with:
-    #     path: ~/.cache/ms-playwright
-    #     key: ${{ runner.os }}-playwright-${{ steps.get-playwright-version.outputs.version }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-playwright-
-    # - name: Install Playwright browsers and dependencies
-    #   if: steps.cache-playwright.outputs.cache-hit != 'true'
-    #   run: |
-    #     pwsh ./MSTestPlaywright/bin/Debug/net8.0/playwright.ps1 install --with-deps
-    # - name: Build & Install
-    #   run: dotnet build ./MSTestPlaywright/MSTestPlaywright.sln
-    # - name: Install Playwright browsers
-    #  run: pwsh ./MSTestPlaywright/bin/Debug/net8.0/playwright.ps1 install --with-deps
     - name: Run tests
       run: dotnet test ./MSTestPlaywright/MSTestPlaywright.sln
