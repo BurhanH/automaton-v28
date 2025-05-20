@@ -1,6 +1,3 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: .NET - Playwright MSTest
 
 on:
@@ -10,18 +7,46 @@ on:
     branches: [ "main" ]
 
 jobs:
+  cache-image:
+    runs-on: ubuntu-latest
+    steps:
+      # Cache Docker image
+      - name: Cache Docker image
+        id: cache-image
+        uses: actions/cache@v4
+        with:
+          path: /tmp/docker-image.tar
+          key: ${{ runner.os }}-docker-playwright-v1.52.0-noble
+          restore-keys: |
+            ${{ runner.os }}-docker-playwright-
+
+      # Pull and save image if cache miss
+      - name: Pull and save Docker image
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        run: |
+          docker pull mcr.microsoft.com/playwright/dotnet:v1.52.0-noble
+          docker save -o /tmp/docker-image.tar mcr.microsoft.com/playwright/dotnet:v1.52.0-noble
+
   test:
+    needs: cache-image
     timeout-minutes: 15
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright/dotnet:v1.52.0-noble
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Build & Install
-      run: dotnet build ./MSTestPlaywright/MSTestPlaywright.sln
-    - name: Run tests
-      run: dotnet test ./MSTestPlaywright/MSTestPlaywright.sln
+      # Load cached image (optional, as container directive pulls it)
+      - name: Load cached Docker image
+        run: |
+          if [ -f /tmp/docker-image.tar ]; then
+            docker load -i /tmp/docker-image.tar
+          fi
+
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build & Install
+        run: dotnet build ./MSTestPlaywright/MSTestPlaywright.sln
+      - name: Run tests
+        run: dotnet test ./MSTestPlaywright/MSTestPlaywright.sln
