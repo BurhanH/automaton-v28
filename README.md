@@ -33,3 +33,14 @@ MSTest<br>
 3. [MSTest](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-csharp-with-mstest)
 4. [Playwright](https://playwright.dev/dotnet/)
 5. [GitHub Actions](https://github.com/features/actions)
+
+## Architecture
+```mermaid
+graph TD
+    A[MSTest Runner] --> B(Test Scripts PlaywrightTest.cs);
+    B --> C{Playwright Library};
+    C --> D[Browser Chromium];
+    D --> E(System Under Test playwright.dev);
+```
+
+This project uses MSTest as the test runner to execute test scripts written in C#. The test scripts leverage the Playwright library to automate browser interactions. Playwright, in turn, controls a browser instance (Chromium in this case) to interact with the system under test, which is the playwright.dev website.
